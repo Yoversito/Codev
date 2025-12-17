@@ -484,10 +484,12 @@ p {
     box-shadow: var(--shadow);
 }
 
+/* FIX LOGO HERO MOBILE: dejamos cover en desktop */
 .image-container img {
     width: 100%;
     height: 500px;
     object-fit: cover;
+    object-position: center;
     display: block;
 }
 
@@ -1386,8 +1388,15 @@ p {
         padding-top: 80px;
     }
 
+    /* FIX LOGO HERO MOBILE: mostrar el logo completo (sin recorte) */
+    .image-container {
+        background: var(--bg-secondary);
+    }
+
     .image-container img {
         height: 400px;
+        object-fit: contain; /* <- clave */
+        object-position: center;
     }
 
     .vinyl {
