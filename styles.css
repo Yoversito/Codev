@@ -1320,6 +1320,7 @@ p {
     position: fixed;
     top: 70px; /* Reducido para móviles */
     left: 0;
+    right: 0; /* ✅ FIX: asegura que cubra todo el ancho */
     width: 100%;
     background: var(--bg-card);
     -webkit-backdrop-filter: blur(20px);
@@ -1331,9 +1332,13 @@ p {
     visibility: hidden;
     transition: var(--transition);
     border-bottom: 1px solid var(--border);
-    z-index: 999;
-    /* FIX: evita que se “salga” horizontalmente */
+    /* ✅ FIX: antes 999 (quedaba por detrás en algunas secciones). Ahora siempre encima */
+    z-index: 2000;
+    /* ✅ FIX: si el menú es más alto que la pantalla, que haga scroll interno */
+    max-height: calc(100dvh - 70px);
+    overflow-y: auto;
     overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
   }
   .nav-menu.active {
     transform: translateY(0);
