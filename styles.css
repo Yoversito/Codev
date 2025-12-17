@@ -45,6 +45,9 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
+  /* FIX: evita scroll horizontal en móvil */
+  overflow-x: hidden;
+  width: 100%;
 }
 
 body {
@@ -54,6 +57,17 @@ body {
   line-height: 1.6;
   overflow-x: hidden;
   transition: var(--transition);
+  width: 100%;
+}
+
+/* FIX: multimedia nunca debe “salirse” del viewport */
+img,
+video,
+iframe,
+canvas,
+svg {
+  max-width: 100%;
+  height: auto;
 }
 
 .container {
@@ -288,6 +302,8 @@ p {
           backdrop-filter: blur(10px);
   background: var(--glass);
   border-bottom: 1px solid var(--border);
+  /* FIX: corta cualquier desborde horizontal */
+  overflow-x: hidden;
 }
 
 .navbar .container {
@@ -582,6 +598,8 @@ p {
 /* ===== SECTIONS COMMON ===== */
 .section {
   padding: 100px 0;
+  /* FIX: corta cualquier desborde horizontal */
+  overflow-x: hidden;
 }
 
 .section-header {
@@ -1057,6 +1075,8 @@ p {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 60px;
+  /* FIX: evita que algo “empuje” el ancho */
+  overflow-x: hidden;
 }
 
 .contact-info h3 {
@@ -1072,6 +1092,8 @@ p {
   align-items: center;
   gap: 15px;
   margin-bottom: 20px;
+  /* FIX: permite que el texto haga wrap en flex */
+  min-width: 0;
 }
 
 .contact-item i {
@@ -1080,14 +1102,29 @@ p {
   width: 40px;
 }
 
+/* FIX: el contenedor de texto dentro de flex no debe forzar ancho */
+.contact-item div {
+  min-width: 0;
+}
+
 .contact-item h5 {
   margin-bottom: 5px;
+}
+
+/* FIX: correos/textos largos no generan scroll */
+.contact-item p {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .social-links {
   display: flex;
   gap: 15px;
   margin-top: 30px;
+  /* FIX: si no entra, baja de línea (adiós scroll horizontal) */
+  flex-wrap: wrap;
+  row-gap: 15px;
+  max-width: 100%;
 }
 
 .social-link {
@@ -1102,6 +1139,8 @@ p {
   font-size: 1.2rem;
   text-decoration: none;
   transition: var(--transition);
+  /* FIX: no se estira raro en flex */
+  flex: 0 0 auto;
 }
 
 .social-link:hover {
@@ -1143,6 +1182,8 @@ p {
   background: var(--bg-secondary);
   padding: 60px 0 30px;
   border-top: 1px solid var(--border);
+  /* FIX: corta cualquier desborde horizontal */
+  overflow-x: hidden;
 }
 
 .footer-content {
@@ -1193,6 +1234,8 @@ p {
 .newsletter-form {
   display: flex;
   margin-top: 15px;
+  /* FIX: evita overflow en flex */
+  max-width: 100%;
 }
 
 .newsletter-form input {
@@ -1202,6 +1245,8 @@ p {
   border: 1px solid var(--border);
   border-radius: 5px 0 0 5px;
   color: var(--text-primary);
+  /* FIX: clave para que el input no empuje el ancho */
+  min-width: 0;
 }
 
 .newsletter-form button {
@@ -1225,12 +1270,18 @@ p {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  /* FIX: si no entra, que haga wrap sin empujar ancho */
+  flex-wrap: wrap;
+  gap: 15px;
 }
 
 .footer-bottom p {
   font-size: 0.9rem;
   color: var(--text-secondary);
   margin: 0;
+  /* FIX: por si hay texto largo */
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .footer-bottom i {
@@ -1278,6 +1329,8 @@ p {
     transition: var(--transition);
     border-bottom: 1px solid var(--border);
     z-index: 999;
+    /* FIX: evita que se “salga” horizontalmente */
+    overflow-x: hidden;
   }
   .nav-menu.active {
     transform: translateY(0);
@@ -1320,6 +1373,10 @@ p {
   .footer-bottom {
     flex-direction: column;
     gap: 15px;
+  }
+  /* Opcional útil: en móvil centra los íconos */
+  .social-links {
+    justify-content: center;
   }
 }
 @media (max-width: 576px) {
