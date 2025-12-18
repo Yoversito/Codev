@@ -255,7 +255,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const typingText = document.querySelector('.typing-text');
     const texts = [
         'DJ - productor - animador',
-        'Experiencia internacional',
         'Más de 150 eventos',
         'Sonido potente',
         'Luces espectaculares y más...'

@@ -1,6 +1,6 @@
 /* ===== VARIABLES ===== */
 :root {
-  /* Tema oscuro (default) */
+  
   --bg-primary: #0a0a0f;
   --bg-secondary: #14141f;
   --bg-card: rgba(30, 30, 46, 0.8);
@@ -1345,51 +1345,36 @@ p {
     display: flex;
   }
 
-  /* ===== FIX MENÚ MÓVIL (VISIBLE EN CUALQUIER SCROLL) =====
-     - Menú como overlay de pantalla completa (no depende del scroll)
-     - Capa propia (translate3d) para evitar glitches en móviles
-     - pointer-events para que cuando esté oculto no “interfiera”
-  */
   .nav-menu {
     position: fixed;
-    inset: 0; /* top/right/bottom/left: 0 */
+    top: 70px; /* Reducido para móviles */
+    left: 0;
+    right: 0; /* ✅ FIX: asegura que cubra todo el ancho */
     width: 100%;
-    height: 100dvh;
-
     background: var(--bg-card);
     backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-
-    display: flex;
     flex-direction: column;
-    list-style: none;
-
-    /* deja espacio para la barra superior (navbar) */
-    padding: calc(70px + env(safe-area-inset-top)) 20px 20px;
-
-    /* estado cerrado */
-    transform: translate3d(0, -110%, 0);
+    padding: 20px;
+    transform: translateY(-100%);
     opacity: 0;
     visibility: hidden;
-    pointer-events: none;
-
     transition: var(--transition);
     border-bottom: 1px solid var(--border);
 
-    /* por encima del contenido */
-    z-index: 9990;
+    /* ✅ FIX: antes 999 (quedaba por detrás en algunas secciones). Ahora siempre encima */
+    z-index: 2000;
 
-    /* si el menú es largo, scrollea dentro */
+    /* ✅ FIX: si el menú es más alto que la pantalla, que haga scroll interno */
+    max-height: calc(100dvh - 70px);
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
   }
 
   .nav-menu.active {
-    transform: translate3d(0, 0, 0);
+    transform: translateY(0);
     opacity: 1;
     visibility: visible;
-    pointer-events: auto;
   }
 
   .menu-toggle.active span:nth-child(1) {
@@ -1404,10 +1389,10 @@ p {
     transform: rotate(-45deg) translate(6px, -6px);
   }
 
-  /* Ajuste del theme-toggle en móviles */
+  /* CORRECCIÓN PRINCIPAL: Ajustar posición del theme-toggle en móviles */
   .theme-toggle {
-    right: 70px;
-    top: 18px;
+    right: 70px; /* Dejar espacio para el menú hamburguesa */
+    top: 18px; /* Ajustamos posición vertical */
     width: 50px;
     height: 50px;
     font-size: 1.3rem;
@@ -1439,11 +1424,11 @@ p {
     gap: 15px;
   }
 
+  /* Opcional útil: en móvil centra los íconos */
   .social-links {
     justify-content: center;
   }
 }
-
 
 @media (max-width: 576px) {
   .container {
@@ -1505,9 +1490,7 @@ p {
   }
 
   .nav-menu {
-      padding-top: calc(65px + env(safe-area-inset-top));
-  /* top removido: ahora usamos padding-top */
- /* Ajustado para móviles pequeños */
+    top: 65px; /* Ajustado para móviles pequeños */
   }
 }
 
@@ -1533,7 +1516,7 @@ p {
   }
 
   .nav-menu {
-    padding-top: calc(60px + env(safe-area-inset-top));
+    top: 60px;
   }
 }
 
