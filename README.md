@@ -17,6 +17,8 @@ Resumen del proyecto
 		- mixes/
 	- video/: vídeos relacionados
 
+	xdd
+
 - Notas:
 	- Usar styles.scss si se preprocesa SASS/SCSS.
 	- Imágenes en assets/img/gallery/ están en formato AVIF.
