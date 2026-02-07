@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ===== TEMA CLARO/OSCURO =====
     const themeToggle = document.getElementById('theme-toggle');
-    const themeIcon = themeToggle.querySelector('.fa-moon');
     const html = document.documentElement;
 
     // Verificar tema guardado o preferencia del sistema
@@ -34,48 +33,70 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 300);
     });
 
-    // ===== CURSOR PERSONALIZADO =====
+    // ===== CURSOR PERSONALIZADO - CORREGIDO =====
     const cursor = document.querySelector('.custom-cursor');
-
-    document.addEventListener('mousemove', (e) => {
-        cursor.style.left = e.clientX + 'px';
-        cursor.style.top = e.clientY + 'px';
-    });
-
-    // Cambiar cursor en elementos interactivos
-    const interactiveElements = document.querySelectorAll('a, button, input, .play-btn, .gallery-item');
-
-    interactiveElements.forEach(el => {
-        el.addEventListener('mouseenter', () => {
-            cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
-            cursor.style.background = 'var(--neon-cyan)';
+    
+    // Solo inicializar cursor si existe el elemento
+    if (cursor) {
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
         });
 
-        el.addEventListener('mouseleave', () => {
-            cursor.style.transform = 'translate(-50%, -50%) scale(1)';
-            cursor.style.background = 'var(--neon-green)';
-        });
-    });
+        // Cambiar cursor en elementos interactivos
+        const interactiveElements = document.querySelectorAll('a, button, input, .play-btn, .gallery-item, .video-card');
 
-    // ===== MENÚ MÓVIL =====
+        interactiveElements.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
+                cursor.style.background = 'var(--neon-cyan)';
+                cursor.style.opacity = '1';
+            });
+
+            el.addEventListener('mouseleave', () => {
+                cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+                cursor.style.background = 'var(--neon-green)';
+                cursor.style.opacity = '0.7';
+            });
+        });
+
+        // Ocultar cursor en móviles
+        if (window.matchMedia('(max-width: 768px)').matches) {
+            cursor.style.display = 'none';
+        }
+    }
+
+    // ===== MENÚ MÓVIL - COMPLETAMENTE CORREGIDO =====
     const menuToggle = document.getElementById('menuToggle');
     const navMenu = document.getElementById('navMenu');
+    const navBackdrop = document.getElementById('navBackdrop');
     const navLinks = document.querySelectorAll('.nav-link');
 
-    menuToggle.addEventListener('click', () => {
+    // Función para abrir/cerrar menú
+    function toggleMenu() {
         menuToggle.classList.toggle('active');
         navMenu.classList.toggle('active');
-    });
+        navBackdrop.classList.toggle('active');
+        document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
+    }
+
+    // Evento para el botón hamburguesa
+    if (menuToggle) {
+        menuToggle.addEventListener('click', toggleMenu);
+    }
+
+    // Evento para el backdrop
+    if (navBackdrop) {
+        navBackdrop.addEventListener('click', toggleMenu);
+    }
 
     // Cerrar menú al hacer clic en enlace
     navLinks.forEach(link => {
         link.addEventListener('click', () => {
             menuToggle.classList.remove('active');
             navMenu.classList.remove('active');
-
-            // Actualizar enlace activo
-            navLinks.forEach(l => l.classList.remove('active'));
-            link.classList.add('active');
+            navBackdrop.classList.remove('active');
+            document.body.style.overflow = '';
         });
     });
 
@@ -83,83 +104,22 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('scroll', () => {
         // Navbar con scroll
         const navbar = document.querySelector('.navbar');
-        if (window.scrollY > 50) {
-            navbar.style.background = 'var(--glass)';
-            navbar.style.backdropFilter = 'blur(10px)';
-        } else {
-            navbar.style.background = 'transparent';
-            navbar.style.backdropFilter = 'none';
-        }
-
-        // Animaciones al hacer scroll
-        const sections = document.querySelectorAll('.section');
-        const windowHeight = window.innerHeight;
-        const scrollY = window.scrollY + windowHeight * 0.8;
-
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.offsetHeight;
-
-            if (scrollY > sectionTop && scrollY < sectionTop + sectionHeight) {
-                const elements = section.querySelectorAll('.fade-in-up');
-                elements.forEach((el, index) => {
-                    setTimeout(() => {
-                        el.classList.add('fade-in-up');
-                    }, index * 100);
-                });
+        if (navbar) {
+            if (window.scrollY > 50) {
+                navbar.style.background = 'var(--glass)';
+                navbar.style.backdropFilter = 'blur(10px)';
+            } else {
+                navbar.style.background = 'transparent';
+                navbar.style.backdropFilter = 'none';
             }
-        });
+        }
     });
 
     // ===== REPRODUCTOR DE AUDIO =====
     const playButtons = document.querySelectorAll('.play-btn');
     const audioPlayers = document.querySelectorAll('.audio-player');
 
-    // URLs de audio de ejemplo (SoundHelix)
-    const audioUrls = {
-        mix1: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
-        mix2: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
-        mix3: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3'
-    };
-
-    playButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const audioId = this.getAttribute('data-audio');
-            const audioElement = document.getElementById(`audio-${audioId}`);
-            const playerId = `player-${audioId}`;
-            const playerElement = document.getElementById(playerId);
-
-            // Si hay un audio reproduciéndose, pausarlo
-            if (currentAudio && currentAudio !== audioElement) {
-                currentAudio.pause();
-                const currentPlayBtn = currentPlayer.querySelector('.play-pause i');
-                currentPlayBtn.className = 'fas fa-play';
-            }
-
-            // Si es el mismo audio, pausar/reanudar
-            if (currentAudio === audioElement) {
-                if (audioElement.paused) {
-                    audioElement.play();
-                    playerElement.querySelector('.play-pause i').className = 'fas fa-pause';
-                } else {
-                    audioElement.pause();
-                    playerElement.querySelector('.play-pause i').className = 'fas fa-play';
-                }
-            } else {
-                // Reproducir nuevo audio
-                audioElement.play();
-                playerElement.querySelector('.play-pause i').className = 'fas fa-pause';
-            }
-
-            currentAudio = audioElement;
-            currentPlayer = playerElement;
-
-            // Actualizar progreso
-            updateAudioProgress(audioElement, playerElement);
-        });
-    });
-
-    // Controladores de reproducción en cada player
+    // Controladores de reproducción
     audioPlayers.forEach(player => {
         const playPauseBtn = player.querySelector('.play-pause');
         const progressBar = player.querySelector('.progress');
@@ -171,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const playerId = player.id.replace('player-', '');
         const audioElement = document.getElementById(`audio-${playerId}`);
 
-        if (!audioElement) return;
+        if (!audioElement || !playPauseBtn) return;
 
         // Play/Pause
         playPauseBtn.addEventListener('click', () => {
@@ -179,10 +139,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Pausar audio actual si hay uno reproduciéndose
                 if (currentAudio && currentAudio !== audioElement) {
                     currentAudio.pause();
-                    currentPlayer.querySelector('.play-pause i').className = 'fas fa-play';
+                    const currentBtn = currentPlayer.querySelector('.play-pause i');
+                    if (currentBtn) currentBtn.className = 'fas fa-play';
                 }
 
-                audioElement.play();
+                audioElement.play().catch(e => {
+                    console.error('Error reproduciendo audio:', e);
+                    playPauseBtn.querySelector('i').className = 'fas fa-play';
+                });
                 playPauseBtn.querySelector('i').className = 'fas fa-pause';
                 currentAudio = audioElement;
                 currentPlayer = player;
@@ -196,18 +160,20 @@ document.addEventListener('DOMContentLoaded', function() {
         audioElement.addEventListener('timeupdate', () => {
             const currentTime = audioElement.currentTime;
             const duration = audioElement.duration;
-            const progressPercent = (currentTime / duration) * 100;
+            
+            if (duration) {
+                const progressPercent = (currentTime / duration) * 100;
+                progressBar.style.width = `${progressPercent}%`;
 
-            progressBar.style.width = `${progressPercent}%`;
+                // Formatear tiempo
+                const formatTime = (time) => {
+                    const minutes = Math.floor(time / 60);
+                    const seconds = Math.floor(time % 60);
+                    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                };
 
-            // Formatear tiempo
-            const formatTime = (time) => {
-                const minutes = Math.floor(time / 60);
-                const seconds = Math.floor(time % 60);
-                return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            };
-
-            timeDisplay.textContent = `${formatTime(currentTime)} / ${formatTime(duration)}`;
+                timeDisplay.textContent = `${formatTime(currentTime)} / ${formatTime(duration)}`;
+            }
         });
 
         // Click en barra de progreso
@@ -216,7 +182,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const width = progressContainer.clientWidth;
             const duration = audioElement.duration;
 
-            audioElement.currentTime = (clickX / width) * duration;
+            if (duration) {
+                audioElement.currentTime = (clickX / width) * duration;
+            }
         });
 
         // Control de volumen
@@ -229,129 +197,162 @@ document.addEventListener('DOMContentLoaded', function() {
             playPauseBtn.querySelector('i').className = 'fas fa-play';
             progressBar.style.width = '0%';
         });
+
+        // Inicializar volumen
+        audioElement.volume = volumeSlider.value / 100;
     });
 
-    function updateAudioProgress(audio, player) {
-        if (!audio || !player) return;
+    // Botones play en las tarjetas
+    playButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const audioId = this.getAttribute('data-audio');
+            const audioElement = document.getElementById(`audio-${audioId}`);
+            const playerId = `player-${audioId}`;
+            const playerElement = document.getElementById(playerId);
 
-        const progressBar = player.querySelector('.progress');
-        const timeDisplay = player.querySelector('.time');
+            if (!audioElement || !playerElement) return;
 
-        audio.addEventListener('timeupdate', function() {
-            const percent = (audio.currentTime / audio.duration) * 100;
-            progressBar.style.width = `${percent}%`;
+            const playPauseBtn = playerElement.querySelector('.play-pause');
 
-            const formatTime = (time) => {
-                const minutes = Math.floor(time / 60);
-                const seconds = Math.floor(time % 60);
-                return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            };
+            if (currentAudio && currentAudio !== audioElement) {
+                currentAudio.pause();
+                const currentBtn = currentPlayer.querySelector('.play-pause i');
+                if (currentBtn) currentBtn.className = 'fas fa-play';
+            }
 
-            timeDisplay.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
+            if (audioElement.paused) {
+                audioElement.play().catch(e => {
+                    console.error('Error reproduciendo audio:', e);
+                });
+                playPauseBtn.querySelector('i').className = 'fas fa-pause';
+            } else {
+                audioElement.pause();
+                playPauseBtn.querySelector('i').className = 'fas fa-play';
+            }
+
+            currentAudio = audioElement;
+            currentPlayer = playerElement;
         });
-    }
+    });
 
     // ===== ANIMACIÓN DE TECLADO =====
     const typingText = document.querySelector('.typing-text');
-    const texts = [
-        'DJ - productor - animador',
-        'Más de 150 eventos',
-        'Sonido potente',
-        'Luces espectaculares y más...'
-    ];
+    if (typingText) {
+        const texts = [
+            'DJ & Producer especializado en House, Techno y EDM',
+            'Más de 150 eventos realizados',
+            'Sonido único y energía inigualable',
+            'Booking disponible para tu evento'
+        ];
 
-    let textIndex = 0;
-    let charIndex = 0;
-    let isDeleting = false;
-    let isEnd = false;
+        let textIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        let typingSpeed = 100;
 
-    function typeEffect() {
-        const currentText = texts[textIndex];
+        function typeEffect() {
+            const currentText = texts[textIndex];
 
-        if (isDeleting) {
-            typingText.textContent = currentText.substring(0, charIndex - 1);
-            charIndex--;
-        } else {
-            typingText.textContent = currentText.substring(0, charIndex + 1);
-            charIndex++;
+            if (isDeleting) {
+                typingText.textContent = currentText.substring(0, charIndex - 1);
+                charIndex--;
+                typingSpeed = 50;
+            } else {
+                typingText.textContent = currentText.substring(0, charIndex + 1);
+                charIndex++;
+                typingSpeed = 100;
+            }
+
+            if (!isDeleting && charIndex === currentText.length) {
+                isDeleting = true;
+                typingSpeed = 1000;
+                setTimeout(typeEffect, typingSpeed);
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                textIndex = (textIndex + 1) % texts.length;
+                typingSpeed = 500;
+                setTimeout(typeEffect, typingSpeed);
+            } else {
+                setTimeout(typeEffect, typingSpeed);
+            }
         }
 
-        if (!isDeleting && charIndex === currentText.length) {
-            isEnd = true;
-            isDeleting = true;
-            setTimeout(typeEffect, 2000);
-        } else if (isDeleting && charIndex === 0) {
-            isDeleting = false;
-            textIndex = (textIndex + 1) % texts.length;
-            setTimeout(typeEffect, 500);
-        } else {
-            setTimeout(typeEffect, isDeleting ? 50 : 100);
-        }
+        // Iniciar animación de teclado
+        setTimeout(typeEffect, 1000);
     }
-
-    // Iniciar animación de teclado
-    setTimeout(typeEffect, 1000);
 
     // ===== ANIMACIÓN DE BARRAS DE HABILIDAD =====
     const skillLevels = document.querySelectorAll('.skill-level');
+    if (skillLevels.length > 0) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const level = entry.target.getAttribute('data-level');
+                    entry.target.style.width = `${level}%`;
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const level = entry.target.getAttribute('data-level');
-                entry.target.style.width = `${level}%`;
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.5 });
+        skillLevels.forEach(skill => observer.observe(skill));
+    }
 
-    skillLevels.forEach(skill => observer.observe(skill));
-
-    // ===== FORMULARIO DE CONTACTO =====
+    // ===== FORMULARIO DE CONTACTO - CORREGIDO PARA ENVÍO REAL =====
     const bookingForm = document.getElementById('bookingForm');
+    if (bookingForm) {
+        bookingForm.addEventListener('submit', function(e) {
+            e.preventDefault();
 
-    bookingForm.addEventListener('submit', function(e) {
-        e.preventDefault();
+            // Animación de envío
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
 
-        // Animación de envío
-        const submitBtn = this.querySelector('button[type="submit"]');
-        const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+            submitBtn.disabled = true;
 
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
-        submitBtn.disabled = true;
+            // Verificar que EmailJS esté disponible
+            if (!window.emailjs || typeof emailjs.sendForm !== 'function') {
+                console.error('EmailJS no está disponible');
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+                showNotification('Error: El servicio de correo no está disponible. Por favor, contáctanos directamente.', 'error');
+                return;
+            }
 
-        // Envío REAL con EmailJS
-        if (!window.emailjs) {
-            submitBtn.innerHTML = originalText;
-            submitBtn.disabled = false;
-            showNotification('EmailJS no está cargado. Revisa el orden de scripts en el HTML.', 'error');
-            return;
-        }
+            // ENVÍO REAL CON EMAILJS
+            emailjs.sendForm('service_vxm8dti', 'template_xlb04zb', this, 'IVLsP4yuQkEPPqxYl')
+                .then(() => {
+                    submitBtn.innerHTML = '<i class="fas fa-check"></i> ¡Enviado!';
+                    submitBtn.style.background = 'var(--neon-green)';
 
-        emailjs.sendForm('service_vxm8dti', 'template_xlb04zb', this)
-            .then(() => {
-                submitBtn.innerHTML = '<i class="fas fa-check"></i> ¡Enviado!';
-                submitBtn.style.background = 'var(--neon-green)';
+                    setTimeout(() => {
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                        submitBtn.style.background = '';
+                        bookingForm.reset();
 
-                setTimeout(() => {
+                        // Mostrar notificación
+                        showNotification('¡Solicitud enviada! Te contactaremos pronto.', 'success');
+                    }, 2000);
+                })
+                .catch((err) => {
+                    console.error('EmailJS error:', err);
                     submitBtn.innerHTML = originalText;
                     submitBtn.disabled = false;
                     submitBtn.style.background = '';
-                    bookingForm.reset();
 
-                    // Mostrar notificación
-                    showNotification('¡Solicitud enviada! Te contactaremos pronto.', 'success');
-                }, 2000);
-            })
-            .catch((err) => {
-                console.error('EmailJS error:', err);
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
-                submitBtn.style.background = '';
+                    // Mensaje de error específico
+                    let errorMessage = 'No se pudo enviar. Intenta nuevamente.';
+                    if (err.text && err.text.includes('Invalid template ID')) {
+                        errorMessage = 'Error: ID de plantilla inválido. Revisa la configuración.';
+                    } else if (err.text && err.text.includes('Invalid service ID')) {
+                        errorMessage = 'Error: ID de servicio inválido. Revisa la configuración.';
+                    }
 
-                showNotification('No se pudo enviar. Intenta nuevamente.', 'error');
-            });
-    });
+                    showNotification(errorMessage, 'error');
+                });
+        });
+    }
 
     // ===== NOTIFICACIONES =====
     function showNotification(message, type) {
@@ -378,16 +379,31 @@ document.addEventListener('DOMContentLoaded', function() {
             gap: 10px;
             z-index: 10000;
             animation: slideIn 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         `;
 
+        // Añadir animaciones CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
         setTimeout(() => {
-            notification.style.animation = 'slideOut 0.3s ease';
+            notification.style.animation = 'slideOut 0.3s ease forwards';
             setTimeout(() => notification.remove(), 300);
         }, 5000);
     }
 
     // ===== CARGAR IMÁGENES CON EFECTO =====
-    const images = document.querySelectorAll('img');
+    const images = document.querySelectorAll('img[loading="lazy"]');
     images.forEach(img => {
         img.addEventListener('load', function() {
             this.style.opacity = '1';
@@ -404,6 +420,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // ===== INICIALIZAR ANIMACIONES AL CARGAR =====
-    window.dispatchEvent(new Event('scroll'));
+    // ===== PREVENIR COMPORTAMIENTO POR DEFECTO EN ENLACES =====
+    document.querySelectorAll('a[href="#"]').forEach(link => {
+        link.addEventListener('click', e => e.preventDefault());
+    });
 });

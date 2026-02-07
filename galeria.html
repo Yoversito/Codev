@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Galería | DJ CodeV</title>
+    <meta
+      name="description"
+      content="Galería de DJ CodeV: momentos en escenario, sets y contenido visual."
+    />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="author" content="DJ CodeV" />
+    <meta name="theme-color" content="#00ff88" />
+
+    <link rel="canonical" href="https://yoversito.github.io/Codev/galeria.html" />
+    <link rel="alternate" href="https://yoversito.github.io/Codev/galeria.html" hreflang="es" />
+
+    <meta property="og:title" content="Galería | DJ CodeV" />
+    <meta
+      property="og:description"
+      content="Galería de DJ CodeV: momentos en escenario, sets y contenido visual."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://yoversito.github.io/Codev/galeria.html" />
+    <meta
+      property="og:image"
+      content="https://yoversito.github.io/Codev/assets/img/logos/logo.png"
+    />
+    <meta property="og:locale" content="es_PE" />
+    <meta property="og:site_name" content="DJ CodeV" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Galería | DJ CodeV" />
+    <meta
+      name="twitter:description"
+      content="Galería de DJ CodeV: momentos en escenario, sets y contenido visual."
+    />
+    <meta
+      name="twitter:image"
+      content="https://yoversito.github.io/Codev/assets/img/logos/logo.png"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+
+    <link rel="icon" href="favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&family=Source+Code+Pro:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <button id="theme-toggle" class="theme-toggle" aria-label="Cambiar tema">
+      <i class="fas fa-moon"></i>
+      <i class="fas fa-sun"></i>
+    </button>
+
+    <div class="custom-cursor"></div>
+
+    <div class="background-animation">
+      <div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    </div>
+
+    <nav class="navbar">
+      <div class="container">
+        <a href="index.html" class="logo">
+          <span class="logo-code">Dj </span>
+          <span class="logo-v"> Co<span class="v-neon">dev</span></span>
+        </a>
+
+        <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
+          <span></span><span></span><span></span>
+        </button>
+
+        <ul class="nav-menu" id="navMenu">
+          <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Inicio</a></li>
+          <li><a href="biografia.html" class="nav-link"><i class="fas fa-user"></i> Biografía</a></li>
+          <li><a href="mezclas.html" class="nav-link"><i class="fas fa-music"></i> Mezclas</a></li>
+          <li><a href="videos.html" class="nav-link"><i class="fas fa-video"></i> Videos</a></li>
+          <li><a href="galeria.html" class="nav-link active"><i class="fas fa-images"></i> Galería</a></li>
+          <li><a href="contacto.html" class="nav-link"><i class="fas fa-envelope"></i> Contacto</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="nav-backdrop" id="navBackdrop"></div>
+
+    <!-- Sección Galería -->
+    <section id="gallery" class="section gallery">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Galería</h2>
+          <p class="section-subtitle">Momento capturados en el escenario</p>
+        </div>
+
+        <div class="gallery-grid">
+          <div class="gallery-item">
+            <img
+              src="assets/img/gallery/galeria1.png"
+              alt="DJ en acción"
+              loading="lazy"
+              decoding="async"
+            />
+            <div class="gallery-overlay">
+              <h5>Sunset Festival</h5>
+              <p>Mexico City, 2023</p>
+            </div>
+          </div>
+
+          <div class="gallery-item">
+            <img
+              src="assets/img/gallery/galeria2.png"
+              alt="Estudio de grabación"
+              loading="lazy"
+              decoding="async"
+            />
+            <div class="gallery-overlay">
+              <h5>Home Studio</h5>
+              <p>Grabando nuevo material</p>
+            </div>
+          </div>
+
+          <div class="gallery-item">
+            <img
+              src="assets/img/gallery/galeria3.png"
+              alt="Equipo DJ"
+              loading="lazy"
+              decoding="async"
+            />
+            <div class="gallery-overlay">
+              <h5>Setup Personalizado</h5>
+              <p>Pioneer & Technics</p>
+            </div>
+          </div>
+
+          <div class="gallery-item">
+            <img
+              src="assets/img/gallery/galeria4.png"
+              alt="Fans en concierto"
+              loading="lazy"
+              decoding="async"
+            />
+            <div class="gallery-overlay">
+              <h5>Crowd Energy</h5>
+              <p>Interacción con el público</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <audio id="audio-mix1" preload="metadata">
+      <source src="assets/audio/mixes/mix1.mp3" type="audio/mpeg" />
+    </audio>
+    <audio id="audio-mix2" preload="metadata">
+      <source src="assets/audio/mixes/cuña1.mp3" type="audio/mpeg" />
+    </audio>
+    <audio id="audio-mix3" preload="metadata">
+      <source src="assets/audio/mixes/cuña2.mp3" type="audio/mpeg" />
+    </audio>
+
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script>
+      emailjs.init({ publicKey: "IVLsP4yuQkEPPqxYl" });
+    </script>
+
+    <script src="script.js"></script>
+  </body>
+</html>
