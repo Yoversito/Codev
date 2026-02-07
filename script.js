@@ -402,23 +402,32 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 5000);
     }
 
-    // ===== CARGAR IMÁGENES CON EFECTO =====
-    const images = document.querySelectorAll('img[loading="lazy"]');
-    images.forEach(img => {
-        img.addEventListener('load', function() {
-            this.style.opacity = '1';
-            this.style.transform = 'scale(1)';
-        });
+    // ===== CARGAR IMÁGENES CON EFECTO + SKELETON =====
+const images = document.querySelectorAll('img[loading="lazy"]');
 
-        img.style.opacity = '0';
-        img.style.transform = 'scale(0.95)';
-        img.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+images.forEach(img => {
+    // Estado inicial: skeleton + fade
+    img.classList.add('skeleton');
+    img.style.opacity = '0';
+    img.style.transform = 'scale(0.95)';
+    img.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
 
-        // Forzar carga
-        if (img.complete) {
-            img.dispatchEvent(new Event('load'));
-        }
-    });
+    const onLoad = () => {
+        img.style.opacity = '1';
+        img.style.transform = 'scale(1)';
+        img.classList.remove('skeleton');
+        img.classList.add('is-loaded');
+        img.removeEventListener('load', onLoad);
+    };
+
+    img.addEventListener('load', onLoad);
+
+    // Si ya estaba cacheada, dispara load manualmente
+    if (img.complete && img.naturalWidth > 0) {
+        onLoad();
+    }
+});
+
 
     // ===== PREVENIR COMPORTAMIENTO POR DEFECTO EN ENLACES =====
     document.querySelectorAll('a[href="#"]').forEach(link => {
