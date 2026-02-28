@@ -4,6 +4,59 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentAudio = null;
     let currentPlayer = null;
 
+    function initSkeletonLoading() {
+        const sections = document.querySelectorAll('.js-skel-section');
+
+        sections.forEach(section => {
+            const items = Array.from(section.querySelectorAll('[data-skel-item]'));
+            if (items.length === 0) return;
+
+            let pendingCount = 0;
+
+            section.classList.add('is-loading');
+            section.setAttribute('aria-busy', 'true');
+
+            const finishSectionIfDone = () => {
+                if (pendingCount > 0) return;
+                section.classList.remove('is-loading');
+                section.setAttribute('aria-busy', 'false');
+            };
+
+            const markItemReady = (item) => {
+                if (item.dataset.skelReady === 'true') return;
+                item.dataset.skelReady = 'true';
+                item.classList.add('is-ready');
+                pendingCount -= 1;
+                finishSectionIfDone();
+            };
+
+            items.forEach(item => {
+                const media = item.querySelector('img, iframe');
+                if (!media) return;
+
+                pendingCount += 1;
+
+                if (media.tagName === 'IMG') {
+                    if (media.complete) {
+                        markItemReady(item);
+                        return;
+                    }
+
+                    media.addEventListener('load', () => markItemReady(item), { once: true });
+                    media.addEventListener('error', () => markItemReady(item), { once: true });
+                    return;
+                }
+
+                media.addEventListener('load', () => markItemReady(item), { once: true });
+                media.addEventListener('error', () => markItemReady(item), { once: true });
+            });
+
+            finishSectionIfDone();
+        });
+    }
+
+    initSkeletonLoading();
+
     // ===== TEMA CLARO/OSCURO =====
     const themeToggle = document.getElementById('theme-toggle');
     const html = document.documentElement;
@@ -32,39 +85,6 @@ document.addEventListener('DOMContentLoaded', function() {
             themeToggle.style.transform = 'rotate(0)';
         }, 300);
     });
-
-    // ===== CURSOR PERSONALIZADO - CORREGIDO =====
-    const cursor = document.querySelector('.custom-cursor');
-    
-    // Solo inicializar cursor si existe el elemento
-    if (cursor) {
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-        });
-
-        // Cambiar cursor en elementos interactivos
-        const interactiveElements = document.querySelectorAll('a, button, input, .play-btn, .gallery-item, .video-card');
-
-        interactiveElements.forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
-                cursor.style.background = 'var(--neon-cyan)';
-                cursor.style.opacity = '1';
-            });
-
-            el.addEventListener('mouseleave', () => {
-                cursor.style.transform = 'translate(-50%, -50%) scale(1)';
-                cursor.style.background = 'var(--neon-green)';
-                cursor.style.opacity = '0.7';
-            });
-        });
-
-        // Ocultar cursor en móviles
-        if (window.matchMedia('(max-width: 768px)').matches) {
-            cursor.style.display = 'none';
-        }
-    }
 
     // ===== MENÚ MÓVIL - COMPLETAMENTE CORREGIDO =====
     const menuToggle = document.getElementById('menuToggle');
@@ -401,33 +421,6 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => notification.remove(), 300);
         }, 5000);
     }
-
-    // ===== CARGAR IMÁGENES CON EFECTO + SKELETON =====
-const images = document.querySelectorAll('img[loading="lazy"]');
-
-images.forEach(img => {
-    // Estado inicial: skeleton + fade
-    img.classList.add('skeleton');
-    img.style.opacity = '0';
-    img.style.transform = 'scale(0.95)';
-    img.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-
-    const onLoad = () => {
-        img.style.opacity = '1';
-        img.style.transform = 'scale(1)';
-        img.classList.remove('skeleton');
-        img.classList.add('is-loaded');
-        img.removeEventListener('load', onLoad);
-    };
-
-    img.addEventListener('load', onLoad);
-
-    // Si ya estaba cacheada, dispara load manualmente
-    if (img.complete && img.naturalWidth > 0) {
-        onLoad();
-    }
-});
-
 
     // ===== PREVENIR COMPORTAMIENTO POR DEFECTO EN ENLACES =====
     document.querySelectorAll('a[href="#"]').forEach(link => {

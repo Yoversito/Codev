@@ -214,27 +214,6 @@ p {
   display: block;
 }
 
-/* ===== CURSOR - CORREGIDO ===== */
-.custom-cursor {
-  position: fixed;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: var(--neon-green);
-  pointer-events: none;
-  z-index: 9999;
-  mix-blend-mode: difference;
-  transform: translate(-50%, -50%);
-  transition: transform 0.1s;
-  opacity: 0.7;
-}
-
-/* Eliminar el punto verde fijo que seguía al cursor */
-.custom-cursor::before,
-.custom-cursor::after {
-  display: none;
-}
-
 /* ===== BACKGROUND ANIMATION ===== */
 .background-animation {
   position: fixed;
@@ -321,9 +300,10 @@ p {
 }
 
 .logo {
-  font-family: "Orbitron", sans-serif;
+  font-family: "Exo 2", sans-serif;
   font-size: 2rem;
-  font-weight: 900;
+  font-weight: 700;
+  letter-spacing: 0.03em;
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -397,8 +377,9 @@ p {
 .nav-link {
   color: var(--text-secondary);
   text-decoration: none;
-  font-family: "Source Code Pro", monospace;
-  font-weight: 600;
+  font-family: "Exo 2", sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.02em;
   font-size: 0.95rem;
   display: flex;
   align-items: center;
@@ -991,17 +972,26 @@ p {
   position: relative;
   height: 200px;
   overflow: hidden;
+  background: var(--bg-secondary);
+}
+
+.video-thumbnail .real-content,
+.video-thumbnail .real-content > a {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .video-thumbnail img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
   transition: transform 0.5s ease;
 }
 
 .video-card:hover .video-thumbnail img {
-  transform: scale(1.1);
+  transform: none;
 }
 
 .play-overlay {
@@ -1078,17 +1068,24 @@ p {
   border-radius: 10px;
   overflow: hidden;
   cursor: pointer;
+  background: var(--bg-secondary);
+}
+
+.gallery-item .real-content {
+  width: 100%;
+  height: 100%;
 }
 
 .gallery-item img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
   transition: transform 0.5s ease;
 }
 
 .gallery-item:hover img {
-  transform: scale(1.1);
+  transform: none;
 }
 
 .gallery-overlay {
@@ -1638,46 +1635,125 @@ body.biografia-page .navbar {
 
 
 /* ========================================
-   SKELETON LOADING (solo CSS/SCSS)
+   SKELETON LOADING
    ======================================== */
 
-/* Colores de skeleton adaptados al theme */
 :root {
-  --skeleton-base: rgba(255, 255, 255, 0.06);
-  --skeleton-highlight: rgba(255, 255, 255, 0.14);
+  --skeleton-base: rgba(255, 255, 255, 0.08);
+  --skeleton-highlight: rgba(255, 255, 255, 0.2);
 }
 
 [data-theme="light"] {
-  --skeleton-base: rgba(0, 0, 0, 0.06);
-  --skeleton-highlight: rgba(0, 0, 0, 0.12);
+  --skeleton-base: rgba(0, 0, 0, 0.08);
+  --skeleton-highlight: rgba(0, 0, 0, 0.16);
 }
 
-@keyframes skeletonShimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
-/* Clase que pondremos por JS mientras carga */
 .skeleton {
   background: linear-gradient(
     90deg,
     var(--skeleton-base) 25%,
-    var(--skeleton-highlight) 37%,
-    var(--skeleton-base) 63%
+    var(--skeleton-highlight) 40%,
+    var(--skeleton-base) 55%
   );
-  background-size: 400% 100%;
-  animation: skeletonShimmer 1.2s ease-in-out infinite;
+  background-size: 300% 100%;
+  animation: skeleton-shimmer 1.4s linear infinite;
 }
 
-/* Evitar saltos mientras carga (ajusta si quieres) */
-img.skeleton {
-  min-height: 140px;
-  border-radius: 10px; /* opcional, para que se vea bonito */
+.skeleton--text {
+  height: 14px;
+  border-radius: 999px;
 }
 
-/* Cuando ya cargó */
-img.is-loaded {
-  animation: none !important;
-  background: none !important;
-  min-height: 0;
+.skeleton--thumb {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+}
+
+.skeleton--card {
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+}
+
+.skeleton--video {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+}
+
+.skeleton--btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+}
+
+.js-skel-item {
+  position: relative;
+}
+
+.js-skel-item .skeleton-placeholder {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+
+.real-content {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+
+.is-loading .js-skel-item .real-content {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.is-loading .js-skel-item.is-ready .real-content {
+  opacity: 1;
+  visibility: visible;
+}
+
+.is-loading .js-skel-item.is-ready .skeleton-placeholder,
+.js-skel-section:not(.is-loading) .js-skel-item .skeleton-placeholder {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.skel-card-lines {
+  padding: 20px;
+}
+
+.skel-card-lines .skeleton--text {
+  margin-bottom: 12px;
+}
+
+.skel-card-lines .skeleton--text:last-child {
+  width: 65%;
+  margin-bottom: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+
+  .real-content,
+  .js-skel-item .skeleton-placeholder {
+    transition: none;
+  }
 }

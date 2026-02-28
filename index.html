@@ -110,9 +110,6 @@
       <i class="fas fa-sun"></i>
     </button>
 
-    <!-- Cursor personalizado -->
-    <div class="custom-cursor"></div>
-
     <!-- Fondo animado -->
     <div class="background-animation">
       <div class="particle"></div>
@@ -215,18 +212,26 @@
           </div>
         </div>
 
-        <div class="hero-image">
-          <div class="image-container">
-            <img
-              src="assets/img/logos/logo.png"
-              alt="DJ CodeV en acción"
-              loading="eager"
-              decoding="async"
-            />
-            <div class="image-overlay"></div>
-            <div class="vinyl-animation">
-              <div class="vinyl">
-                <div class="vinyl-inner"></div>
+        <div class="hero-image js-skel-section">
+          <div class="js-skel-item" data-skel-item>
+            <div class="skeleton-placeholder" aria-hidden="true">
+              <div class="skeleton skeleton--card"></div>
+            </div>
+
+            <div class="real-content">
+              <div class="image-container">
+                <img
+                  src="assets/img/logos/logo.png"
+                  alt="DJ CodeV en acción"
+                  loading="eager"
+                  decoding="async"
+                />
+                <div class="image-overlay"></div>
+                <div class="vinyl-animation">
+                  <div class="vinyl">
+                    <div class="vinyl-inner"></div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
